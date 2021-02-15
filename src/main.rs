@@ -10,7 +10,7 @@ struct Pos(u8);
 impl Pos {
     pub const EMPTY: Self = Pos(u8::MAX);
 
-    pub fn new(row: u8, col: u8) -> Pos {
+    pub fn new(col: u8, row: u8) -> Pos {
         Pos(row * 8 + col)
     }
 
