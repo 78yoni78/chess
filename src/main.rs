@@ -50,6 +50,21 @@ struct Piece {
 }
 
 impl Piece {
+    pub fn piece_index(self) -> usize {
+        use PieceType::*;
+
+        let mut ret = match self.typ {
+            Pawn => 0,
+            Rook => 8,
+            Knight => 10,
+            Bishop => 12,
+            Queen => 14,
+            King => 15,
+        };
+        if self.color == Color::Black { ret += 16; }
+        ret
+    }
+
     pub fn can_move(self, start: Pos, end: Pos) -> bool {
         use PieceType::*;
         use Color::*;
