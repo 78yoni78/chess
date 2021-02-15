@@ -99,5 +99,6 @@ fn main() {
         pieces: [Pos::EMPTY; 32],
         squares: [None; 64],
     };
+    
     println!("Hello, world!");
 }
