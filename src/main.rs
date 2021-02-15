@@ -118,47 +118,25 @@ impl Board {
         Board {
             pieces: [
                 //  White pawns
-                Pos::new(0, 1),
-                Pos::new(1, 1),
-                Pos::new(2, 1),
-                Pos::new(3, 1),
-                Pos::new(4, 1),
-                Pos::new(5, 1),
-                Pos::new(6, 1),
-                Pos::new(7, 1),
+                Pos::new(0, 1), Pos::new(1, 1), Pos::new(2, 1), Pos::new(3, 1), Pos::new(4, 1), Pos::new(5, 1), Pos::new(6, 1), Pos::new(7, 1),
                 //  White rooks
-                Pos::new(0, 0),
-                Pos::new(7, 0),
+                Pos::new(0, 0), Pos::new(7, 0),
                 //  White knights
-                Pos::new(1, 0),
-                Pos::new(6, 0),
+                Pos::new(1, 0), Pos::new(6, 0),
                 //  White bishops
-                Pos::new(2, 0),
-                Pos::new(5, 0),
+                Pos::new(2, 0), Pos::new(5, 0),
                 //  White queen and king
-                Pos::new(3, 0),
-                Pos::new(4, 0),
+                Pos::new(3, 0), Pos::new(4, 0),
                 //  White pawns
-                Pos::new(0, 7),
-                Pos::new(1, 7),
-                Pos::new(2, 7),
-                Pos::new(3, 7),
-                Pos::new(4, 7),
-                Pos::new(5, 7),
-                Pos::new(6, 7),
-                Pos::new(7, 7),
+                Pos::new(0, 7), Pos::new(1, 7), Pos::new(2, 7), Pos::new(3, 7), Pos::new(4, 7), Pos::new(5, 7), Pos::new(6, 7), Pos::new(7, 7),
                 //  White rooks
-                Pos::new(0, 8),
-                Pos::new(7, 8),
+                Pos::new(0, 8), Pos::new(7, 8),
                 //  White knights
-                Pos::new(1, 8),
-                Pos::new(6, 8),
+                Pos::new(1, 8), Pos::new(6, 8),
                 //  White bishops
-                Pos::new(2, 8),
-                Pos::new(5, 8),
+                Pos::new(2, 8), Pos::new(5, 8),
                 //  White queen and king
-                Pos::new(3, 8),
-                Pos::new(4, 8),
+                Pos::new(3, 8), Pos::new(4, 8),
             ],
             squares: [
                 P(Rook), P(Knight), P(Bishop), P(Queen), P(King), P(Bishop), P(Knight), P(Rook),
