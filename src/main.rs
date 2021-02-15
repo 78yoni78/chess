@@ -120,6 +120,20 @@ struct Board {
     squares: [Option<Piece>; 64],
 }
 
+impl std::ops::Index<Pos> for Board {
+    type Output = Option<Piece>;
+
+    fn index(&self, pos: Pos) -> &Self::Output {
+        &self.squares[pos.0 as usize]
+    }
+}
+
+impl std::ops::IndexMut<Pos> for Board {
+    fn index_mut(&mut self, pos: Pos) -> &mut Self::Output {
+        &mut self.squares[pos.0 as usize]
+    }
+}
+
 impl Board {
     pub const START: Board = {
         use PieceType::*;
@@ -161,6 +175,12 @@ impl Board {
             ],
         }
     };
+
+    // pub fn move_piece(&mut self, start: Pos, end: Pos) {
+    //     if let Some(piece) = self[start] {
+    //         let ind = piece.piece_index()
+    //     }
+    // }
 }
 
 fn main() {
