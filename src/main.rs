@@ -167,8 +167,8 @@ impl Board {
                 None, None, None, None, None, None, None, None, 
                 None, None, None, None, None, None, None, None, 
                 None, None, None, None, None, None, None, None, 
-                P(Rook), P(Knight), P(Bishop), P(Queen), P(King), P(Bishop), P(Knight), P(Rook),
-                P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), 
+                p(Pawn), p(Pawn), p(Pawn), p(Pawn), p(Pawn), p(Pawn), p(Pawn), p(Pawn), 
+                p(Rook), p(Knight), p(Bishop), p(Queen), p(King), p(Bishop), p(Knight), p(Rook),
             ],
         }
     };
