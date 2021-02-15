@@ -10,24 +10,24 @@ struct Pos(u8);
 impl Pos {
     pub const EMPTY: Self = Pos(u8::MAX);
 
-    pub fn new(col: u8, row: u8) -> Pos {
+    pub const fn new(col: u8, row: u8) -> Pos {
         Pos(row * 8 + col)
     }
 
-    pub fn row(self) -> u8 {
+    pub const fn row(self) -> u8 {
         self.0 / 8
     }
     
-    pub fn col(self) -> u8 {
+    pub const fn col(self) -> u8 {
         self.0 % 8
     }
 
-    pub fn add_col(self, x: i16) -> Pos {
+    pub const fn add_col(self, x: i16) -> Pos {
         let y = self.0 as i16;
         Pos((y + x) as u8)
     }
 
-    pub fn add_row(self, x: i16) -> Pos {
+    pub const fn add_row(self, x: i16) -> Pos {
         let y = self.0 as i16;
         Pos((y + x * 8) as u8)
     }
@@ -50,7 +50,7 @@ struct Piece {
 }
 
 impl Piece {
-    pub fn piece_index(self) -> usize {
+    pub const fn piece_index(self) -> usize {
         use PieceType::*;
 
         let mut ret = match self.typ {
@@ -61,7 +61,7 @@ impl Piece {
             Queen => 14,
             King => 15,
         };
-        if self.color == Color::Black { ret += 16; }
+        if let Color::Black = self.color { ret += 16; }
         ret
     }
 
@@ -71,7 +71,7 @@ impl Piece {
 
         match self {
             Piece { typ: Pawn, color } => {
-                let dir = if color == White { 1 } else { -1 };
+                let dir = match color { White => 1, Black => -1, };
                 end == start.add_row(dir) ||
                 end == start.add_row(2 * dir) ||
                 end == start.add_row(dir).add_col(1) ||
@@ -107,13 +107,77 @@ impl Piece {
 struct Board {
     pieces: [Pos; 32],
     squares: [Option<Piece>; 64],
-} 
+}
+
+impl Board {
+    pub const START: Board = {
+        use PieceType::*;
+        const fn P(typ: PieceType) -> Option<Piece> { Some (Piece {typ, color: Color::White}) }
+        const fn p(typ: PieceType) -> Option<Piece> { Some (Piece {typ, color: Color::Black}) }
+
+        Board {
+            pieces: [
+                //  White pawns
+                Pos::new(0, 1),
+                Pos::new(1, 1),
+                Pos::new(2, 1),
+                Pos::new(3, 1),
+                Pos::new(4, 1),
+                Pos::new(5, 1),
+                Pos::new(6, 1),
+                Pos::new(7, 1),
+                //  White rooks
+                Pos::new(0, 0),
+                Pos::new(7, 0),
+                //  White knights
+                Pos::new(1, 0),
+                Pos::new(6, 0),
+                //  White bishops
+                Pos::new(2, 0),
+                Pos::new(5, 0),
+                //  White queen and king
+                Pos::new(3, 0),
+                Pos::new(4, 0),
+                //  White pawns
+                Pos::new(0, 7),
+                Pos::new(1, 7),
+                Pos::new(2, 7),
+                Pos::new(3, 7),
+                Pos::new(4, 7),
+                Pos::new(5, 7),
+                Pos::new(6, 7),
+                Pos::new(7, 7),
+                //  White rooks
+                Pos::new(0, 8),
+                Pos::new(7, 8),
+                //  White knights
+                Pos::new(1, 8),
+                Pos::new(6, 8),
+                //  White bishops
+                Pos::new(2, 8),
+                Pos::new(5, 8),
+                //  White queen and king
+                Pos::new(3, 8),
+                Pos::new(4, 8),
+            ],
+            squares: [
+                P(Rook), P(Knight), P(Bishop), P(Queen), P(King), P(Bishop), P(Knight), P(Rook),
+                P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), 
+                None, None, None, None, None, None, None, None, 
+                None, None, None, None, None, None, None, None, 
+                None, None, None, None, None, None, None, None, 
+                None, None, None, None, None, None, None, None, 
+                P(Rook), P(Knight), P(Bishop), P(Queen), P(King), P(Bishop), P(Knight), P(Rook),
+                P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), 
+            ],
+        }
+    };
+}
 
 fn main() {
-    let board = Board {
-        pieces: [Pos::EMPTY; 32],
-        squares: [None; 64],
-    };
+    let board = Board::START;
     
-    println!("Hello, world!");
+    let p = board.pieces[Piece {typ: PieceType::Rook, color: Color::Black}.piece_index()];
+
+    println!("Position of blakc rook is {:?}", p);
 }
