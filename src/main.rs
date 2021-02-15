@@ -43,6 +43,17 @@ enum PieceType {
     King,
 }
 
+impl PieceType {
+    pub fn ray_piece(self) -> bool {
+        use PieceType::*;
+
+        match self {
+            Rook | Bishop | Queen => true,
+            _ => false,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 struct Piece {
     typ: PieceType,
