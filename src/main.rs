@@ -152,6 +152,20 @@ impl std::ops::IndexMut<Pos> for Board {
     }
 }
 
+impl std::ops::Index<Piece> for Board {
+    type Output = Pos;
+
+    fn index(&self, piece: Piece) -> &Self::Output {
+        &self.pieces[piece.piece_index()]
+    }
+}
+
+impl std::ops::IndexMut<Piece> for Board {
+    fn index_mut(&mut self, piece: Piece) -> &mut Self::Output {
+        &mut self.pieces[piece.piece_index()]
+    }
+}
+
 impl Board {
     pub fn starting_board() -> Self {
         let mut pieces = [Pos::EMPTY; 32];
