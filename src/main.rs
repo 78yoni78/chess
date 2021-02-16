@@ -181,11 +181,20 @@ impl Board {
         Self { pieces, squares }
     }
 
-    // pub fn move_piece(&mut self, start: Pos, end: Pos) {
-    //     if let Some(piece) = self[start] {
-    //         let ind = piece.piece_index()
-    //     }
-    // }
+    pub fn remove_piece(&mut self, pos: Pos) {
+        if let Some(piece) = self[pos] {
+            self[pos] = None;
+            self[piece] = Pos::EMPTY;
+        }
+    }
+
+    pub fn move_piece(&mut self, start: Pos, end: Pos) {
+        if let Some(piece) = self[start] {
+            self[piece] = end;
+            self[start] = None;
+            self[end] = Some(piece);
+        }
+    }
 }
 
 fn main() {
