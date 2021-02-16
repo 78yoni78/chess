@@ -14,6 +14,9 @@ enum PieceType {
     King,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+struct Piece(u8);
+
 impl PieceType {
     pub fn ray_piece(self) -> bool {
         use PieceType::*;
@@ -24,9 +27,6 @@ impl PieceType {
         }
     }
 }
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-struct Piece(u8);
 
 impl Piece {
     const BLACK_START: u8 = 16;
