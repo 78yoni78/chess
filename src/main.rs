@@ -35,6 +35,17 @@ impl Pos {
         Pos(row * 8 + col)
     }
 
+    pub fn from_notation(s: &str) -> Self {
+        assert_eq!(s.len(), 2);
+
+        let chars: Vec<char> = s.chars().collect();
+
+        assert!('a' as u32 <= chars[0] as u32 && chars[0] as u32 <= 'h' as u32);
+        assert!('1' as u32 <= chars[1] as u32 && chars[1] as u32 <= '8' as u32);
+
+        Self::new((chars[0] as u32 - 'a' as u32) as u8, (chars[1] as u32 - '1' as u32) as u8)
+    }
+
     pub const fn row(self) -> u8 {
         self.0 / 8
     }
