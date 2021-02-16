@@ -195,6 +195,15 @@ impl Board {
             self[end] = Some(piece);
         }
     }
+
+    pub fn sudo_legal(&self, start: Pos, end: Pos) -> bool {
+        match self[start] {
+            None => false,
+            Some(piece) => {
+                piece.can_move(start, end)
+            },
+        }
+    }
 }
 
 fn main() {
