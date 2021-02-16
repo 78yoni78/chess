@@ -5,6 +5,27 @@ enum Color {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
+enum PieceType {
+    Pawn,
+    Rook,
+    Knight,
+    Bishop,
+    Queen,
+    King,
+}
+
+impl PieceType {
+    pub fn ray_piece(self) -> bool {
+        use PieceType::*;
+
+        match self {
+            Rook | Bishop | Queen => true,
+            _ => false,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
 struct Pos(u8);
 
 impl Pos {
@@ -33,80 +54,77 @@ impl Pos {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
-enum PieceType {
-    Pawn,
-    Rook,
-    Knight,
-    Bishop,
-    Queen,
-    King,
-}
-
-impl PieceType {
-    pub fn ray_piece(self) -> bool {
-        use PieceType::*;
-
-        match self {
-            Rook | Bishop | Queen => true,
-            _ => false,
-        }
-    }
-}
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-struct Piece {
-    typ: PieceType,
-    color: Color,
-}
+struct Piece(u8);
 
 impl Piece {
-    pub const fn piece_index(self) -> usize {
+    const BLACK_START: u8 = 16;
+
+    pub fn from_start_pos(pos: Pos) -> Self {
+        const POS_MAX: u8 = 63;
+
+        assert!(!(3 <= pos.0 && pos.0 <= 5));
+        
+        if pos.row() < 3 {
+            Self(pos.0)
+        } else {
+            Self(Self::BLACK_START + (POS_MAX - pos.0))
+        }
+    }
+
+    pub const fn piece_index(self) -> usize { self.0 as usize }
+
+    pub const fn typ(self) -> PieceType {
         use PieceType::*;
 
-        let mut ret = match self.typ {
-            Pawn => 0,
-            Rook => 8,
-            Knight => 10,
-            Bishop => 12,
-            Queen => 14,
-            King => 15,
-        };
-        if let Color::Black = self.color { ret += 16; }
-        ret
+        match self.0 % 16 {
+            0 | 7 => Rook,
+            1 | 6 => Knight,
+            2 | 5 => Bishop,
+            3 => Queen,
+            4 => King,
+            _ => Pawn,
+        }
+    }
+
+    pub const fn color(self) -> Color {
+        use Color::*;
+        
+        if self.0 >= Self::BLACK_START { Black } else { White } 
     }
 
     pub fn can_move(self, start: Pos, end: Pos) -> bool {
         use PieceType::*;
         use Color::*;
 
-        match self {
-            Piece { typ: Pawn, color } => {
-                let dir = match color { White => 1, Black => -1, };
+        match self.typ() {
+            Pawn => {
+                let dir = match self.color() { White => 1, Black => -1, };
                 end == start.add_row(dir) ||
                 end == start.add_row(2 * dir) ||
                 end == start.add_row(dir).add_col(1) ||
                 end == start.add_row(dir).add_col(-1)
             }
-            Piece { typ: Rook, .. } => {
+            Rook => {
                 start.row() == end.row() || start.col() == end.col()
             }
-            Piece { typ: Knight, .. } => {
+            Knight => {
                 let dif1 = (start.row() as i32 - end.row() as i32).abs();
                 let dif2 = (start.col() as i32 - end.col() as i32).abs();
                 (dif1 == 1 && dif2 == 2) || (dif1 == 2 && dif2 == 1)
             }
-            Piece { typ: Bishop, .. } => {
+            Bishop => {
                 let dif1 = (start.row() as i32 - end.row() as i32).abs();
                 let dif2 = (start.col() as i32 - end.col() as i32).abs();
                 dif1 == dif2
             }
-            Piece { typ: Queen, .. } => start.row() == end.row() || start.col() == end.col() || {
+            Queen => start.row() == end.row() || start.col() == end.col() || {
                 let dif1 = (start.row() as i32 - end.row() as i32).abs();
                 let dif2 = (start.col() as i32 - end.col() as i32).abs();
                 dif1 == dif2
             },
-            Piece { typ: King, .. } => {
+            King => {
                 let dif1 = (start.row() as i32 - end.row() as i32).abs();
                 let dif2 = (start.col() as i32 - end.col() as i32).abs();
                 (dif1 == 0 || dif1 == 1) && (dif2 == 0 || dif2 == 1)
@@ -135,46 +153,19 @@ impl std::ops::IndexMut<Pos> for Board {
 }
 
 impl Board {
-    pub const START: Board = {
-        use PieceType::*;
-        const fn P(typ: PieceType) -> Option<Piece> { Some (Piece {typ, color: Color::White}) }
-        const fn p(typ: PieceType) -> Option<Piece> { Some (Piece {typ, color: Color::Black}) }
+    pub fn starting_board() -> Self {
+        let mut pieces = [Pos::EMPTY; 32];
+        let mut squares = [None; 64];
 
-        Board {
-            pieces: [
-                //  White pawns
-                Pos::new(0, 1), Pos::new(1, 1), Pos::new(2, 1), Pos::new(3, 1), Pos::new(4, 1), Pos::new(5, 1), Pos::new(6, 1), Pos::new(7, 1),
-                //  White rooks
-                Pos::new(0, 0), Pos::new(7, 0),
-                //  White knights
-                Pos::new(1, 0), Pos::new(6, 0),
-                //  White bishops
-                Pos::new(2, 0), Pos::new(5, 0),
-                //  White queen and king
-                Pos::new(3, 0), Pos::new(4, 0),
-                //  White pawns
-                Pos::new(0, 7), Pos::new(1, 7), Pos::new(2, 7), Pos::new(3, 7), Pos::new(4, 7), Pos::new(5, 7), Pos::new(6, 7), Pos::new(7, 7),
-                //  White rooks
-                Pos::new(0, 8), Pos::new(7, 8),
-                //  White knights
-                Pos::new(1, 8), Pos::new(6, 8),
-                //  White bishops
-                Pos::new(2, 8), Pos::new(5, 8),
-                //  White queen and king
-                Pos::new(3, 8), Pos::new(4, 8),
-            ],
-            squares: [
-                P(Rook), P(Knight), P(Bishop), P(Queen), P(King), P(Bishop), P(Knight), P(Rook),
-                P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), P(Pawn), 
-                None, None, None, None, None, None, None, None, 
-                None, None, None, None, None, None, None, None, 
-                None, None, None, None, None, None, None, None, 
-                None, None, None, None, None, None, None, None, 
-                p(Pawn), p(Pawn), p(Pawn), p(Pawn), p(Pawn), p(Pawn), p(Pawn), p(Pawn), 
-                p(Rook), p(Knight), p(Bishop), p(Queen), p(King), p(Bishop), p(Knight), p(Rook),
-            ],
+        let mut i = 0;
+        for pos in (0..15).chain(48..63).map(Pos) {
+            pieces[i] = pos;
+            squares[pos.0 as usize] = Some(Piece(i as u8));
+            i += 1;
         }
-    };
+
+        Self { pieces, squares }
+    }
 
     // pub fn move_piece(&mut self, start: Pos, end: Pos) {
     //     if let Some(piece) = self[start] {
@@ -184,9 +175,9 @@ impl Board {
 }
 
 fn main() {
-    let board = Board::START;
+    let board = Board::starting_board();
     
-    let p = board.pieces[Piece {typ: PieceType::Rook, color: Color::Black}.piece_index()];
+    let p = board.pieces[Piece::from_start_pos(Pos::new(0, 7)).piece_index()];
 
-    println!("Position of blakc rook is {:?}", p);
+    println!("Position of black rook is {:?}", p);
 }
