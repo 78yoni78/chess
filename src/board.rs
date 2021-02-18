@@ -40,7 +40,7 @@ impl Board {
         let mut squares = [None; 64];
 
         let mut i = 0;
-        for pos in (0..15).chain(48..63).map(Pos::from_pos_index) {
+        for pos in (0..16).chain(48..64).map(Pos::from_pos_index) {
             pieces[i] = pos;
             squares[pos.pos_index()] = Some(Piece::from_start_pos(pos));
             i += 1;
