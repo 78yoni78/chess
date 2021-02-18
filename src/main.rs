@@ -27,8 +27,10 @@ fn piece_letter(piece: Piece) -> char {
 
 fn print_board(board: &Board) {
     const SIZE: u8 = 8;
+    const FLIP_BOARD: bool = true;
 
     for y in 0..SIZE {
+        let y = if FLIP_BOARD { SIZE - y -1 } else { y };
         for x in 0..SIZE {
             let pos = Pos::new(x, y);
             let piece = board[pos];
