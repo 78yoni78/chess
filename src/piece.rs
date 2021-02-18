@@ -1,11 +1,13 @@
+use crate::pos::*;
+
 #[derive(Debug, Clone, Copy, PartialEq)]
-enum Color {
+pub enum Color {
     White,
     Black,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-enum PieceType {
+pub enum PieceType {
     Pawn,
     Rook,
     Knight,
@@ -15,7 +17,8 @@ enum PieceType {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-struct Piece(u8);
+pub struct Piece(u8);
+
 
 impl PieceType {
     pub fn ray_piece(self) -> bool {
@@ -34,12 +37,13 @@ impl Piece {
     pub fn from_start_pos(pos: Pos) -> Self {
         const POS_MAX: u8 = 63;
 
-        assert!(!(3 <= pos.0 && pos.0 <= 5));
-        
+        assert!(!(3 <= pos.row() && pos.row() <= 5));
+     
+        let i = pos.pos_index()as u8;
         if pos.row() < 3 {
-            Self(pos.0)
+            Self(i)
         } else {
-            Self(Self::BLACK_START + (POS_MAX - pos.0))
+            Self(Self::BLACK_START + (POS_MAX - i))
         }
     }
 
@@ -103,4 +107,19 @@ impl Piece {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_from_starting_pos() {
+        let piece = Piece::from_start_pos(Pos::new(5, 0));
+        assert_eq!(piece.color(), Color::White);
+        assert_eq!(piece.typ(), PieceType::Bishop);
+        
+        let piece = Piece::from_start_pos(Pos::new(5, 7));
+        assert_eq!(piece.color(), Color::Black);
+        assert_eq!(piece.typ(), PieceType::Bishop);
+    }
+}
 
