@@ -20,7 +20,7 @@ impl Pos {
     }
 
     pub fn from_pos_index(i: usize) -> Self {
-        assert!(0 <= i && i < 64);
+        assert!(i < 64);
         Self(i as u8)
     }
 
