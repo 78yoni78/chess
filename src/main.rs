@@ -31,6 +31,9 @@ fn print_board(board: &Board) {
 
     for y in 0..SIZE {
         let y = if FLIP_BOARD { SIZE - y -1 } else { y };
+
+        print!("{}  ", y + 1);
+
         for x in 0..SIZE {
             let pos = Pos::new(x, y);
             let piece = board[pos];
@@ -39,6 +42,13 @@ fn print_board(board: &Board) {
         }
         println!();
     }
+    println!();
+
+    print!("   ");
+    for i in 0..SIZE {
+        print!("{} ", ('a' as u8 + i) as char);
+    }
+    println!();
 }
 
 fn main() {
