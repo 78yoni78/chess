@@ -6,10 +6,41 @@ use pos::*;
 use piece::*;
 use board::*;
 
-fn main() {
-    let board = Board::starting_board();
-    
-    let p = board.pieces[Piece::from_start_pos(Pos::new(0, 7)).piece_index()];
+fn piece_letter(piece: Piece) -> char {
+    use PieceType::*;
+    use Color::*;
 
-    println!("Position of black rook is {:?}", p);
+    let ch = match piece.typ() {
+        Pawn => 'p',
+        Rook => 'r',
+        Knight => 'n',
+        Bishop => 'b',
+        Queen => 'q',
+        King => 'k',
+    };
+
+    match piece.color() {
+        White => ch.to_ascii_uppercase(),
+        Black => ch,
+    }
+}
+
+fn print_board(board: &Board) {
+    const SIZE: u8 = 8;
+
+    for y in 0..SIZE {
+        for x in 0..SIZE {
+            let pos = Pos::new(x, y);
+            let piece = board[pos];
+            let ch = match board[pos] { Some(piece) => piece_letter(piece), None => ' ' };
+            print!("{} ", ch);
+        }
+        println!();
+    }
+}
+
+fn main() {
+    let mut board = Board::starting_board();
+   
+    print_board(&board);
 }
