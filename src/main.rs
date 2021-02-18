@@ -51,7 +51,7 @@ fn print_board(board: &Board) {
 }
 
 fn main() {
-    let mut board = Board::starting_board();
+    let board = Board::starting_board();
    
     print_board(&board);
 }
