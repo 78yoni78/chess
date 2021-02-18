@@ -36,7 +36,6 @@ fn print_board(board: &Board) {
 
         for x in 0..SIZE {
             let pos = Pos::new(x, y);
-            let piece = board[pos];
             let ch = match board[pos] { Some(piece) => piece_letter(piece), None => ' ' };
             print!("{} ", ch);
         }
