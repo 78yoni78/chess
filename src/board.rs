@@ -65,12 +65,85 @@ impl Board {
         }
     }
 
+    fn sudo_legal_bishop(&self, start: Pos, end: Pos) -> bool {
+        let inc_y = if end.row() > start.row() { 1 } else { -1 };
+        let inc_x = if end.col() > start.col() { 1 } else { -1 };
+
+        loop {
+            start.add_row(inc_x); 
+            start.add_col(inc_y); 
+
+            if start == end {
+                break true;
+            } else if self[start] != None {
+                break false;
+            }
+        }
+    }
+
+    fn sudo_legal_rook(&self, start: Pos, end: Pos) -> bool {
+        let (on_x, dir) = if end.col() > start.col() { 
+            (true, 1)
+        } else if end.col() < start.col() {
+            (true, -1)
+        } else if end.row() > start.row() {
+            (false, 1)
+        } else {
+            (false, -1)
+        };
+
+        loop {
+            if on_x {
+                start.add_col(dir);
+            } else {
+                start.add_row(dir);
+            }
+
+            if start == end {
+                break true;
+            } else if self[start] != None {
+                break false;
+            }
+        }
+    }
+
+    fn sudo_legal_queen(&self, start: Pos, end: Pos) -> bool {
+        if start.col() == end.col() || start.row() == end.row() {
+            self.sudo_legal_rook(start, end)
+        } else {
+            self.sudo_legal_bishop(start, end)
+        }
+    }
+
+    fn sudo_legal_pawn(&self, start: Pos, end: Pos) -> bool {
+        let dif = (start.row() as i32 - end.row() as i32).abs();
+        if dif == 2 {
+            let mid = match self[start].unwrap().color() {
+                Color::White => start.add_row(1),
+                Color::Black => start.add_row(-1),
+            };
+            self[mid] == None && self[end] == None
+        } else if /* dif == 1 && */ start.col() == end.col() {
+            self[end] == None
+        } else /* if dif == 1 && start.col() != end.col() */ {
+            self[end] != None //    Color checking is done at caller 
+        }
+    }
+
     pub fn sudo_legal(&self, start: Pos, end: Pos) -> bool {
         match self[start] {
             None => false,
             Some(piece) => {
+                use PieceType::*;
                 piece.color() == self.turn &&
-                piece.can_move(start, end)
+                piece.can_move(start, end) &&
+                match piece.typ() {
+                    Bishop => self.sudo_legal_bishop(start, end),
+                    Rook => self.sudo_legal_rook(start, end),
+                    Queen => self.sudo_legal_queen(start, end),
+                    Pawn => self.sudo_legal_pawn(start, end),
+                    _ => true,
+                }
             },
         }
     }
