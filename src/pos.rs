@@ -60,7 +60,7 @@ mod tests {
 
     #[test]
     fn test_from_notation() {
-        let p = Pos::from_notation("b5");
+        let p = Pos::from_notation("b5").unwrap();
         assert_eq!(p, Pos::new(1, 4));
     }
 }
