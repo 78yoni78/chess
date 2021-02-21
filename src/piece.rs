@@ -31,6 +31,13 @@ impl PieceType {
     }
 }
 
+impl Color {
+    pub fn opposite(self) -> Self {
+        use Color::*;
+        match self { White => Black, Black => White }
+    }
+}
+
 impl Piece {
     const BLACK_START: u8 = 16;
 
