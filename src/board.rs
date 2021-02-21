@@ -69,9 +69,9 @@ impl Board {
         let inc_y = if end.row() > start.row() { 1 } else { -1 };
         let inc_x = if end.col() > start.col() { 1 } else { -1 };
 
+        let mut start = start;
         loop {
-            start.add_row(inc_x); 
-            start.add_col(inc_y); 
+            start = start.add_row(inc_x).add_col(inc_y); 
 
             if start == end {
                 break true;
@@ -92,11 +92,13 @@ impl Board {
             (false, -1)
         };
 
+        let mut start = start;
+
         loop {
             if on_x {
-                start.add_col(dir);
+                start = start.add_col(dir);
             } else {
-                start.add_row(dir);
+                start = start.add_row(dir);
             }
 
             if start == end {
