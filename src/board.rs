@@ -4,6 +4,7 @@ use crate::piece::*;
 pub struct Board {
     pub pieces: [Pos; 32],
     pub squares: [Option<Piece>; 64],
+    pub turn: Color,
 }
 
 impl std::ops::Index<Pos> for Board {
@@ -46,7 +47,7 @@ impl Board {
             i += 1;
         }
 
-        Self { pieces, squares }
+        Self { pieces, squares, turn: Color::White }
     }
 
     pub fn remove_piece(&mut self, pos: Pos) {
@@ -68,6 +69,7 @@ impl Board {
         match self[start] {
             None => false,
             Some(piece) => {
+                piece.color() == self.turn &&
                 piece.can_move(start, end)
             },
         }
