@@ -74,5 +74,9 @@ impl Board {
             },
         }
     }
+
+    pub fn switch_turn(&mut self) {
+        self.turn = self.turn.opposite();
+    }
 }
 
