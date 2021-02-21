@@ -76,6 +76,4 @@ fn main() {
             println!("Illegal move");
         }
     }
-
-    print_board(&board);
 }
