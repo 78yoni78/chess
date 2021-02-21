@@ -70,6 +70,7 @@ fn main() {
         let end = get_pos().expect("Expected a position");
         if board.sudo_legal(start, end) {
             board.move_piece(start, end);
+            board.switch_turn();
             println!("Success!");
         } else {
             println!("Illegal move");
